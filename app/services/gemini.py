@@ -12,7 +12,7 @@ class GeminiService:
     def __init__(self):
         self.client: Optional[genai.Client] = None
         self.model = "gemini-2.0-flash-001"
-        self.api_key = "AIzaSyBkUOVJiF_iG1U8A1geMPLcAKRYWX4tLSM"
+        self.api_key = ""
         self._initialize_client()
 
     def _initialize_client(self) -> None:
