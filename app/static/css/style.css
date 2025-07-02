@@ -22,7 +22,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-.chat-messages {
+.chat-msgs {
     height: 400px;
     overflow-y: auto;
     border: 1px solid #ddd;
@@ -31,18 +31,19 @@ h1 {
     background-color: #fafafa;
 }
 
-.message {
+.msg {
     margin-bottom: 10px;
     padding: 8px;
     border-radius: 4px;
+    word-wrap: break-word;
 }
 
-.message.user {
+.msg.user {
     background-color: #e3f2fd;
     text-align: right;
 }
 
-.message.bot {
+.msg.gemini {
     background-color: #f1f8e9;
 }
 
@@ -51,7 +52,7 @@ h1 {
     gap: 10px;
 }
 
-#messageInput {
+#msgInput {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
@@ -75,4 +76,124 @@ h1 {
 #sendButton:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.typing-indicator {
+    color: #666;
+    font-weight: normal;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.msg h1, .msg h2, .msg h3, .msg h4 {
+    margin: 10px 0 5px 0;
+    color: #333;
+}
+
+.msg h1 {
+    font-size: 1.2em;
+    border-bottom: 1px solid #ddd;
+}
+
+.msg h2 {
+    font-size: 1.1em;
+}
+
+.msg h3 {
+    font-size: 1.05em;
+}
+
+.msg h4 {
+    font-size: 1em;
+}
+
+.msg p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.msg ul, .msg ol {
+    margin: 5px 0;
+    padding-left: 20px;
+}
+
+.msg li {
+    margin: 2px 0;
+}
+
+.msg blockquote {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-left: 3px solid #007bff;
+    background-color: #f8f9fa;
+    font-style: italic;
+}
+
+.msg hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.msg code {
+    background-color: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    color: #d73a49;
+}
+
+.msg pre {
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+    overflow-x: auto;
+}
+
+.msg pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.85em;
+    color: inherit;
+    white-space: pre;
+}
+
+.msg strong {
+    font-weight: bold;
+}
+
+.msg em {
+    font-style: italic;
+}
+
+.msg del {
+    text-decoration: line-through;
+}
+
+.msg a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.msg a:hover {
+    text-decoration: underline;
+}
+
+.msg img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 5px 0;
 }

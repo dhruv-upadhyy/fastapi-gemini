@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+
 </head>
 <body>
-    <div class="chat-messages" id="chatMessages">
+    <div class="chat-msgs" id="chatMsgs">
     </div>
 
     <div class="chat-input">
-        <input type="text" id="messageInput">
-        <button id="sendButton" onclick="sendMessage()">Send</button>
+        <input type="text" id="msgInput">
+        <button id="sendButton" onclick="sendMsg()">Send</button>
     </div>
 
     <script src="/static/js/chat.js"></script>

@@ -22,7 +22,7 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-app.include_router(api_router, prefix="/api")
+app.include_router(api_router)
 
 @app.get("/")
 async def base_route(request: Request):

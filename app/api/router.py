@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter
-from app.api.endpoints import chat
+from app.api import chat
 
 api_router = APIRouter()
 
