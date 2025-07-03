@@ -1,5 +1,7 @@
 const md = markdownit()
 
+let currentSessionId = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     const msgInput = document.getElementById('msgInput');
     const sendButton = document.getElementById('sendButton');
@@ -15,7 +17,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     msgInput.focus();
+    
+    initializeSession();
 });
+
+const initializeSession = async () => {
+    try {
+        const response = await fetch('/chat/session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const sessionData = await response.json();
+        currentSessionId = sessionData.session_id;
+        console.log('Initialized session:', currentSessionId);
+        
+    } catch (error) {
+        console.error('Failed to initialize session:', error);
+    }
+};
+
 
 const sendMsg = async () => {
     const msgInput = document.getElementById('msgInput');
@@ -24,7 +52,6 @@ const sendMsg = async () => {
     if (!msg) return;
 
     addMsg(escapeHtml(msg), true);
-
     msgInput.value = '';
     updateSendButton();
     
@@ -32,23 +59,8 @@ const sendMsg = async () => {
     let accumulatedText = '';
     
     try {
-        const sessionResponse = await fetch('/chat/stream', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: msg })
-        });
+        const eventSource = new EventSource(`/chat/stream/${currentSessionId}?message=${encodeURIComponent(msg)}`);
 
-        if (!sessionResponse.ok) {
-            throw new Error(`Error ${sessionResponse.status}: ${sessionResponse.statusText}`);
-        }
-
-        const sessionData = await sessionResponse.json();
-        const sessionId = sessionData.session_id;
-
-        const eventSource = new EventSource(`/chat/stream/${sessionId}`);
-        
         eventSource.onmessage = function(event) {
             try {
                 const data = JSON.parse(event.data);
@@ -64,6 +76,7 @@ const sendMsg = async () => {
                 }
             } catch (e) {
                 console.error('Error parsing SSE data:', e);
+                console.log('Raw event data:', event.data);
             }
         };
 
@@ -132,4 +145,29 @@ const escapeHtml = (text) => {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+const loadChatHistory = async () => {
+    if (!currentSessionId) return;
+    
+    try {
+        const response = await fetch(`/history/${currentSessionId}`);
+        
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        const chatMsgs = document.getElementById('chatMsgs');
+        chatMsgs.innerHTML = '';
+        
+        data.messages.forEach(message => {
+            addMsg(escapeHtml(message.user_message), true);
+            addMsg(md.render(message.gemini_response), false);
+        });
+        
+    } catch (error) {
+        console.error('Failed to load chat history:', error);
+    }
 }

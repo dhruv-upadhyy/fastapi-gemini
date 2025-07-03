@@ -1,10 +1,14 @@
 import uvicorn
 import logging
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import api_router
+from app.database import connect_to_mongo
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +27,12 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(api_router)
+
+try:
+    connect_to_mongo()
+    logger.info("DB connection initialized")
+except Exception as e:
+    logger.error(f"Failed to initialize DB: {str(e)}")
 
 @app.get("/")
 async def base_route(request: Request):
